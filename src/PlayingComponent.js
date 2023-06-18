@@ -3,23 +3,22 @@ import { Button, Container, Row, Col } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { WebRTCAdaptor } from '@antmedia/webrtc_adaptor';
 
-const PublishingComponent = () => {
-  const [publishing, setPublishing] = useState(false);
+const PlayingComponent = () => {
+  const [playing, setPlaying] = useState(false);
   const [websocketConnected, setWebsocketConnected] = useState(false);
   const [streamId, setStreamId] = useState('stream123');
   const webRTCAdaptor = useRef(null);
-  var publishedStreamId = useRef(null);
+  var playingStream = useRef(null);
 
-  const handlePublish = () => {
-    setPublishing(true);
-    webRTCAdaptor.current.publish(streamId);
-    publishedStreamId.current=streamId
-
+  const handlePlay = () => {
+    setPlaying(true);
+    playingStream.current=streamId
+    webRTCAdaptor.current.play(streamId);
   };
 
-  const handleStopPublishing = () => {
-    setPublishing(false);
-    webRTCAdaptor.current.stop(publishedStreamId.current);
+  const handleStopPlaying = () => {
+    setPlaying(false);
+    webRTCAdaptor.current.stop(playingStream.current);
   };
 
   const handleStreamIdChange = (event) => {
@@ -37,34 +36,36 @@ const PublishingComponent = () => {
         iceServers: [{ urls: 'stun:stun1.l.google.com:19302' }],
       },
       sdp_constraints: {
-        OfferToReceiveAudio: false,
-        OfferToReceiveVideo: false,
+        OfferToReceiveAudio: true,
+        OfferToReceiveVideo: true, // Set to true to receive video
       },
-      localVideoId: 'localVideo',
-      dataChannelEnabled: true,
+      remoteVideoId: 'remoteVideo',
       callback: (info, obj) => {
         if (info === 'initialized') {
           setWebsocketConnected(true);
         }
-        console.log(info, obj);
       },
       callbackError: function (error, message) {
         console.log(error, message);
+        if (error === 'no_stream_exist'){
+            handleStopPlaying();
+            setPlaying(false);
+            alert(error);
+        }
       },
     });
   }, []);
 
   return (
     <Container className="text-center">
-      <h1>Publish Page</h1>
+      <h1>Play Page</h1>
 
       <Row className="mb-4">
         <Col>
           <video
-            id="localVideo"
+            id="remoteVideo"
             controls
             autoPlay
-            muted
             style={{
               width: '40vw',
               height: '60vh',
@@ -89,13 +90,13 @@ const PublishingComponent = () => {
           </div>
         </Row>
         <Col>
-          {!publishing ? (
-            <Button variant="primary" disabled={!websocketConnected} onClick={handlePublish}>
-              Start Publishing
+          {!playing ? (
+            <Button variant="primary" disabled={!websocketConnected} onClick={handlePlay}>
+              Start Playing
             </Button>
           ) : (
-            <Button variant="danger" onClick={handleStopPublishing}>
-              Stop Publishing
+            <Button variant="danger" onClick={handleStopPlaying}>
+              Stop Playing
             </Button>
           )}
         </Col>
@@ -104,4 +105,4 @@ const PublishingComponent = () => {
   );
 };
 
-export default PublishingComponent;
+export default PlayingComponent;
