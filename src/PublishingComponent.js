@@ -27,7 +27,7 @@ const PublishingComponent = () => {
   };
 
   useEffect(() => {
-if(webRTCAdaptor.current != undefined || webRTCAdaptor.current != null){
+if(webRTCAdaptor.current === undefined || webRTCAdaptor.current === null){
     webRTCAdaptor.current = new WebRTCAdaptor({
       websocket_url: 'wss://test.antmedia.io:/WebRTCAppEE/websocket',
       mediaConstraints: {
@@ -53,6 +53,7 @@ if(webRTCAdaptor.current != undefined || webRTCAdaptor.current != null){
         console.log(error, message);
       },
     });
+  }
   }, []);
 
   return (
