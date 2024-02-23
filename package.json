@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@antmedia/webrtc_adaptor": "^2.6.3-SNAPSHOT-2023-Jul-11-07-23",
+    "@antmedia/webrtc_adaptor": "^2.8.2",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
