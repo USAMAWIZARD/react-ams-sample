@@ -69,6 +69,7 @@ const PlayingComponent = () => {
             id="remoteVideo"
             controls
             autoPlay
+            muted="muted" playsinline="playsinline" 
             style={{
               width: '40vw',
               height: '60vh',
